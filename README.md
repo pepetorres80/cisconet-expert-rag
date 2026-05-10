@@ -2,38 +2,52 @@
 
 CiscoNet Expert es un asistente basado en Retrieval-Augmented Generation (RAG) especializado en redes Cisco y troubleshooting de nivel CCNA.
 
-El sistema combina Gemini, ChromaDB y LangGraph para proporcionar respuestas técnicas contextualizadas utilizando documentación Cisco.
+El sistema combina Gemini, ChromaDB y LangGraph para proporcionar respuestas técnicas contextualizadas utilizando documentación Cisco real.
 
 ---
 
-## Características
+# Descripción del proyecto
 
-- Sistema RAG (Retrieval-Augmented Generation)
-- Búsqueda semántica sobre documentación Cisco
-- Asistencia técnica para Cisco IOS
-- Memoria conversacional
-- Orquestación mediante LangGraph
-- Base vectorial con ChromaDB
-- Integración con Gemini 2.5 Flash
-- Prompt engineering especializado en redes
+El objetivo del proyecto es construir un asistente especializado capaz de:
+
+- Consultar documentación técnica Cisco.
+- Recuperar información relevante mediante búsqueda semántica.
+- Generar respuestas contextualizadas utilizando Gemini.
+- Mantener memoria conversacional entre preguntas.
+- Ayudar en tareas de configuración y troubleshooting de redes.
+
+El sistema implementa una arquitectura RAG completa utilizando embeddings, base vectorial y un workflow basado en LangGraph.
 
 ---
 
-## Temas soportados
+# Dominio del proyecto
 
-- VLANs
-- Switching
-- Routing
+El asistente está especializado en tecnologías Cisco y contenidos CCNA:
+
+- Configuración de VLANs
+- Switching y Routing
 - OSPF
 - ACLs
 - NAT / PAT
 - DHCP
-- Comandos Cisco IOS
-- Troubleshooting de red
+- Troubleshooting Cisco IOS
 
 ---
 
-## Stack tecnológico
+# Características principales
+
+- Sistema RAG (Retrieval-Augmented Generation)
+- Búsqueda semántica sobre documentación Cisco
+- Memoria conversacional
+- Integración con Gemini 2.5 Flash
+- Base vectorial ChromaDB
+- Workflow mediante LangGraph
+- Interfaz Streamlit
+- Prompt engineering especializado
+
+---
+
+# Stack tecnológico
 
 | Tecnología | Uso |
 |---|---|
@@ -43,11 +57,12 @@ El sistema combina Gemini, ChromaDB y LangGraph para proporcionar respuestas té
 | ChromaDB | Base de datos vectorial |
 | LangChain | Pipeline RAG |
 | LangGraph | Orquestación del agente |
-| Jupyter Notebook | Entorno de desarrollo |
+| Streamlit | Interfaz web |
+| Jupyter Notebook | Desarrollo y experimentación |
 
 ---
 
-## Arquitectura del proyecto
+# Arquitectura general del sistema
 
 ```text
 Documentos PDF
@@ -69,14 +84,66 @@ Generación de respuestas con Gemini
 
 ---
 
-## Estructura del repositorio
+# Arquitectura LangGraph
+
+El flujo conversacional del agente se implementa mediante LangGraph utilizando dos nodos principales:
+
+## 1. Retrieve Node
+
+Responsable de:
+- Recibir la pregunta del usuario.
+- Buscar información relevante en ChromaDB.
+- Recuperar contexto mediante búsqueda semántica.
+
+## 2. Generate Node
+
+Responsable de:
+- Construir el prompt final.
+- Combinar historial + contexto recuperado.
+- Generar respuestas usando Gemini.
+
+## Flujo del grafo
+
+```text
+Usuario
+   ↓
+Retrieve Node
+   ↓
+Generate Node
+   ↓
+Respuesta final
+```
+
+El sistema mantiene memoria conversacional entre turnos para mejorar la coherencia del diálogo.
+
+---
+
+# Justificación del System Prompt
+
+El system prompt fue diseñado para especializar el comportamiento del modelo en el dominio Cisco Networking.
+
+Objetivos principales:
+
+- Restringir el dominio técnico.
+- Reducir alucinaciones.
+- Obligar al modelo a utilizar el contexto recuperado.
+- Generar respuestas estructuradas y orientadas a troubleshooting.
+- Incluir comandos Cisco IOS cuando sea necesario.
+
+Este enfoque mejora la precisión y coherencia del sistema RAG.
+
+---
+
+# Estructura del repositorio
 
 ```text
 cisconet-expert-rag/
 │
 ├── Proyecto_CiscoNet_Expert.ipynb
+├── streamlit_app.py
 ├── README.md
 ├── requirements.txt
+├── .gitignore
 ├── .env.example
 │
 ├── docs/
@@ -87,29 +154,31 @@ cisconet-expert-rag/
 ├── data/
 │   └── chromadb_cisco/
 │
-├── src/
-│
 └── examples/
 ```
 
 ---
 
-## Instalación
+# Instalación
 
-Clonar el repositorio:
+## 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/tu-usuario/cisconet-expert-rag.git
 cd cisconet-expert-rag
 ```
 
-Crear entorno virtual:
+---
+
+## 2. Crear entorno virtual
 
 ```bash
 python -m venv venv
 ```
 
-Activar entorno virtual:
+---
+
+## 3. Activar entorno virtual
 
 ### Windows
 
@@ -123,7 +192,9 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-Instalar dependencias:
+---
+
+## 4. Instalar dependencias
 
 ```bash
 pip install -r requirements.txt
@@ -131,7 +202,7 @@ pip install -r requirements.txt
 
 ---
 
-## Variables de entorno
+# Variables de entorno
 
 Crear un archivo `.env`:
 
@@ -141,15 +212,15 @@ GOOGLE_API_KEY=tu_api_key
 
 ---
 
-## Ejecución del proyecto
+# Guía de ejecución
 
-Abrir Jupyter Notebook:
+## Ejecutar Notebook
 
 ```bash
 jupyter notebook
 ```
 
-Ejecutar:
+Abrir:
 
 ```text
 Proyecto_CiscoNet_Expert.ipynb
@@ -157,7 +228,28 @@ Proyecto_CiscoNet_Expert.ipynb
 
 ---
 
-## Ejemplos de consultas
+## Ejecutar aplicación Streamlit
+
+```bash
+streamlit run streamlit_app.py
+```
+
+---
+
+# Dependencias principales
+
+- langchain
+- langgraph
+- chromadb
+- langchain-google-genai
+- streamlit
+- pypdf
+- python-dotenv
+- tenacity
+
+---
+
+# Ejemplos de consultas
 
 ```text
 ¿Cómo configuro una VLAN en un switch Cisco?
@@ -173,7 +265,7 @@ Proyecto_CiscoNet_Expert.ipynb
 
 ---
 
-## Ejemplo de respuesta
+# Ejemplo de respuesta
 
 ```text
 Switch(config)# vlan 10
@@ -186,9 +278,9 @@ Switch(config-if)# switchport access vlan 10
 
 ---
 
-## Mejoras futuras
+# Mejoras futuras
 
-- Aplicación web con Streamlit
+- Despliegue público en Streamlit Cloud
 - Arquitectura multiagente
 - Búsqueda híbrida
 - Integración con Packet Tracer
@@ -197,19 +289,19 @@ Switch(config-if)# switchport access vlan 10
 
 ---
 
-## Contexto académico
+# Contexto académico
 
-Este proyecto ha sido desarrollado como trabajo final de un curso de IA Generativa enfocado en:
+Este proyecto ha sido desarrollado como trabajo final del módulo de IA Generativa enfocado en:
 
 - Integración de LLMs
 - Prompt engineering
 - Sistemas RAG
 - Bases de datos vectoriales
 - Agentes IA
-- Workflows con LangGraph
+- LangGraph workflows
 
 ---
 
-## Autor
+# Autor
 
 Jose Torres Sanchez
