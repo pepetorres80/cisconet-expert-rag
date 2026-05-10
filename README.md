@@ -164,7 +164,7 @@ cisconet-expert-rag/
 ## 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/cisconet-expert-rag.git
+git clone https://github.com/pepetorres80/cisconet-expert-rag.git
 cd cisconet-expert-rag
 ```
 
